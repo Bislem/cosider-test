@@ -1,0 +1,189 @@
+<!-- actions here  -->
+<div class="flex flex-row items-center justify-end pt-5 px-10">
+    <button mat-icon-button (click)="close()"><mat-icon>close</mat-icon></button>
+</div>
+<div>
+    <div
+        class=" overflow-y-auto max-h-[50vh] w-full px-10 scrollbar-thumb-indigo-400 scrollbar-track-slate-50 scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full">
+        <h1>Invoice details - {{data.invoice.InvoiceID}}</h1>
+        <!-- details -->
+        <div class="flex flex-row items-center !text-xs">
+            <div class="flex-1 *:mb-1">
+                <p class="font-bold text-xl">Client</p>
+                <p><span class="font-bold">Name : </span> {{data.invoice.ClientName}}</p>
+                <p><span class="font-bold">Address : </span> {{data.invoice.ClientAddress}}</p>
+                <p><span class="font-bold">Phone : </span> {{data.invoice.ClientPhone}}</p>
+                <p><span class="font-bold">RC : </span> {{data.invoice.ClientRC}}</p>
+                <p><span class="font-bold">Bank : </span> {{data.invoice.ClientBank}}</p>
+            </div>
+            <div class="flex-1 *:mb-1">
+                <p class="font-bold text-xl">Supplier</p>
+                <p><span class="font-bold">Name : </span> {{data.invoice.SupplierName}}</p>
+                <p><span class="font-bold">Address : </span> {{data.invoice.SupplierAddress}}</p>
+                <p><span class="font-bold">Phone : </span> {{data.invoice.SupplierPhone}}</p>
+                <p><span class="font-bold">RC : </span> {{data.invoice.SupplierRC}}</p>
+                <p><span class="font-bold">Bank : </span> {{data.invoice.SupplierBank}}</p>
+            </div>
+        </div>
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="ItemID">
+                <th mat-header-cell *matHeaderCellDef>Item ID</th>
+                <td mat-cell *matCellDef="let element"> {{element.ItemID}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ItemLibelle">
+                <th mat-header-cell *matHeaderCellDef>Label</th>
+                <td mat-cell *matCellDef="let element"> {{element.ItemLibelle}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ItemUnit">
+                <th mat-header-cell *matHeaderCellDef>Unit</th>
+                <td mat-cell *matCellDef="let element"> {{element.ItemUnit}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ItemQuantity">
+                <th mat-header-cell *matHeaderCellDef>Qte</th>
+                <td mat-cell *matCellDef="let element"> {{element.ItemQuantity}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ItemPrice">
+                <th mat-header-cell *matHeaderCellDef>Unit Price</th>
+                <td mat-cell *matCellDef="let element"> {{element.ItemPrice}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ItemTax">
+                <th mat-header-cell *matHeaderCellDef>Tax</th>
+                <td mat-cell *matCellDef="let element"> {{element.ItemTax}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="TTC">
+                <th mat-header-cell *matHeaderCellDef>TTC</th>
+                <td mat-cell *matCellDef="let element"> {{element | itemTtc}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="hover:bg-slate-100 hover:cursor-pointer" mat-row
+                *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</div>
+
+<!-- actions here  -->
+<div class="flex flex-row items-center justify-between pb-5 px-10">
+    <span><strong>TTC : </strong> {{data.invoice.InvoiceItems | ttc}}</span>
+    <button mat-icon-button (click)="print()"><mat-icon>print</mat-icon></button>
+</div>
+
+
+
+
+
+
+<div id="print-me" class="hidden">
+    <style>
+        * {
+            -webkit-print-color-adjust: exact !important;
+            /* Chrome, Safari 6 – 15.3, Edge */
+            color-adjust: exact !important;
+            /* Firefox 48 – 96 */
+            print-color-adjust: exact !important;
+            /* Firefox 97+, Safari 15.4+ */
+        }
+    </style>
+    <!-- container  -->
+    <div style="display: flex;flex-direction: column;padding: 10%;font-family: sans-serif;">
+        <h1 style="font-weight: bold;font-size: 20px;font-style: italic;align-self: center;justify-self: center;">
+            Facture N°
+            {{data.invoice.InvoiceID}}</h1>
+        <div style="display: flex;flex-direction: row;width: 100%;font-size: 14px;margin-bottom: 70px;">
+            <div style="flex: 1;"></div>
+            <span>Date de facture : {{data.invoice.InvoiceDate | customDate}}</span>
+        </div>
+        <!-- details section  -->
+        <div style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;">
+            <!-- supplier  -->
+            <div style="display: flex;flex-direction: column;">
+                <h2 style="font-style: italic;margin: 0;font-size: 16px;font-weight: 300;">FOURNISSEUR</h2>
+                <div style="height: 1px;background-color: black;width: 100%;margin: 3px 0;"></div>
+                <span style="font-weight: bold;">{{data.invoice.SupplierName}}</span>
+                <span style="font-style: italic;">{{data.invoice.SupplierAddress}}</span>
+                <span style="font-style: italic;">{{data.invoice.SupplierPhone}}</span>
+                <span style="font-style: italic;">{{data.invoice.SupplierRC}}</span>
+                <span style="font-style: italic;">{{data.invoice.SupplierBank}}</span>
+            </div>
+            <!-- client  -->
+            <div style="display: flex;flex-direction: column;">
+                <h2 style="font-style: italic;margin: 0;font-size: 16px;font-weight: 300;">CLIENT</h2>
+                <div style="height: 1px;background-color: black;width: 100%;margin: 3px 0;"></div>
+                <span style="font-weight: bold;">{{data.invoice.ClientName}}</span>
+                <span style="font-style: italic;">{{data.invoice.ClientAddress}}</span>
+                <span style="font-style: italic;">{{data.invoice.ClientPhone}}</span>
+                <span style="font-style: italic;">{{data.invoice.ClientRC}}</span>
+                <span style="font-style: italic;">{{data.invoice.ClientBank}}</span>
+            </div>
+        </div>
+
+        <!-- table  -->
+        <table style="border-collapse: collapse; width: 100%;margin-top: 20px;">
+            <thead>
+                <tr style="background-color: #FABF8F;background: #FABF8F; text-align: center;">
+                    <th style="border: 1px solid #000; padding: 8px;font-weight: 200;font-size: 12px;">N°</th>
+                    <th style="border: 1px solid #000; padding: 8px;font-weight: 200;font-size: 12px;">LIBELLE</th>
+                    <th style="border: 1px solid #000; padding: 8px;font-weight: 200;font-size: 12px;">QUANTITÉ</th>
+                    <th style="border: 1px solid #000; padding: 8px;font-weight: 200;font-size: 12px;">PRIX</th>
+                    <th style="border: 1px solid #000; padding: 8px;font-weight: 200;font-size: 12px;">HT</th>
+                    <th style="border: 1px solid #000; padding: 8px;font-weight: 200;font-size: 12px;">TTC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add your table rows here -->
+                <tr style="text-align: center;" *ngFor="let item of data.invoice.InvoiceItems;let i=index">
+                    <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{i+1}}</td>
+                    <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{item.ItemLibelle}}</td>
+                    <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{item.ItemQuantity}}</td>
+                    <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{item.ItemPrice |
+                        number:'1.2-2'}}</td>
+                    <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{item.ItemPrice *
+                        item.ItemQuantity | number:'1.2-2'}}</td>
+                    <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{item | itemTtc}}</td>
+                </tr>
+
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+
+
+        <div style="display: flex;flex-direction: row;">
+            <div style="flex: 1;"></div>
+            <table style="border-collapse: collapse; width: 40%;margin-top: 20px;">
+                <tbody>
+                    <!-- Add your table rows here -->
+                    <tr style="text-align: center;">
+                        <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">TOTAL</td>
+                        <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{data.invoice.InvoiceItems | ht}}</td>
+                    </tr>
+                    <tr style="text-align: center;">
+                        <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">TVA</td>
+                        <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{data.invoice.InvoiceItems | tva}}</td>
+                    </tr>
+                    <tr style="text-align: center;">
+                        <td style="border: 1px solid #000; padding: 8px;font-size: 12px;font-weight: bold;">Total TTC</td>
+                        <td style="border: 1px solid #000; padding: 8px;font-size: 12px;">{{data.invoice.InvoiceItems| ttc}}</td>
+                    </tr>
+    
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+
+
+        <div style="display: flex;flex-direction: row;margin-top: 80px;">
+            <div style="flex: 1;"></div>
+            <div style="padding: 20px 50px;flex: 1;display: flex;align-items: center;justify-content: center;">
+                <span>LA SIGNATURE</span>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,3 +1,68 @@
-<h1 class="text-4xl text-red-600">
-  hello world
-</h1>
+<!-- container  -->
+<div class="bg-indigo-200 w-screen h-screen overflow-hidden flex justify-center items-center">
+
+  <!-- table container  -->
+  <div *ngIf="!loading;else isLoading" class="w-3/4 h-3/4 bg-white rounded-xl shadow-xl overflow-hidden flex flex-col">
+
+    <!-- toolbar -->
+    <div class="p-10">
+      <mat-form-field color="primary" [appearance]="'fill'">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+      </mat-form-field>
+    </div>
+
+    <!-- scrollbar  -->
+    <div
+      class=" overflow-y-auto flex-1 w-full p-10 scrollbar-thumb-indigo-400 scrollbar-track-slate-50 scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full">
+      <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="InvoiceID">
+          <th mat-header-cell *matHeaderCellDef>Facture ID</th>
+          <td mat-cell *matCellDef="let element"> {{element.InvoiceID}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="InvoiceDate">
+          <th mat-header-cell *matHeaderCellDef>Facture Date</th>
+          <td mat-cell *matCellDef="let element"> {{element.InvoiceDate}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ClientName">
+          <th mat-header-cell *matHeaderCellDef>Client Nom</th>
+          <td mat-cell *matCellDef="let element"> {{element.ClientName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="SupplierName">
+          <th mat-header-cell *matHeaderCellDef>Fournisseur Nom</th>
+          <td mat-cell *matCellDef="let element"> {{element.SupplierName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="TTC">
+          <th mat-header-cell *matHeaderCellDef>Montant TTC</th>
+          <td mat-cell *matCellDef="let element"> {{element.InvoiceItems | ttc}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="viewDetails(element)"><mat-icon>visibility</mat-icon></button>
+          </td>
+        </ng-container>
+
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr class="hover:bg-slate-100 hover:cursor-pointer"  mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- loading spinner  -->
+  <ng-template #isLoading>
+    <div class="w-full h-full flex items-center justify-center">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>
+
